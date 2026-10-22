@@ -1,0 +1,18 @@
+1. Vague questions
+    Who hasn't paid?
+    Who teaches Math to Grade 10?
+    Are there any bad students?
+    How big is Section A?
+    Get me the principal's phone number.
+
+2. Daily Use Test
+    List all female students in Grade 10 Section B
+    What is the average salary of teachers in the Academics department?
+    Which students were absent yesterday?
+    Show me the fee structure for Grade 5.
+
+3. Complex Queries
+    Show me the names of parents whose children have an overdue fee payment for the 'Tuition' fee type.
+    List the top 5 students in the 'Mid-Term Examination 2026' based on their total marks obtained across all subjects.
+    Find all teachers who have a class scheduled on Monday morning between 09:00 and 11:00.
+    Which class has the highest overall attendance rate this academic year?

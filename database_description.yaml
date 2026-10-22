@@ -1,0 +1,436 @@
+academic_years:
+  description: "Stores academic session years (e.g., 2026-2027) to track historical and current school sessions."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the academic year, auto-incremented."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "Display name of the academic year, e.g., '2026-2027'."
+    start_date:
+      type: DATE
+      nullable: true
+      description: "The date when the academic session officially begins."
+    end_date:
+      type: DATE
+      nullable: true
+      description: "The date when the academic session officially ends."
+    is_active:
+      type: BOOLEAN
+      nullable: true
+      description: "Indicates if this is the currently active academic year (1 for true, 0 for false)."
+
+classes:
+  description: "Represents standard grade levels in the school, such as 'Grade 10' or 'Grade 1'."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the class/grade."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "Name of the grade level, e.g., 'Grade 10'."
+
+roles:
+  description: "System user roles defining permissions and user types (e.g., Super Admin, Principal, Teacher, Student, Parent)."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the user role."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "The name of the role (e.g., 'Teacher', 'Student')."
+
+subjects:
+  description: "Catalog of all academic subjects taught in the school, like Mathematics or English."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the subject."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "The full name of the subject, e.g., 'Mathematics'."
+    code:
+      type: VARCHAR
+      nullable: true
+      description: "A short, unique alphanumeric code for the subject, e.g., 'MATH101'."
+
+sections:
+  description: "Subdivisions of classes (e.g., 'Section A', 'Section B') to manage student batches."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the section."
+    class_id:
+      type: INTEGER
+      nullable: true
+      fk: "classes.id"
+      description: "The grade level this section belongs to."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "The name of the section, e.g., 'Section A'."
+
+users:
+  description: "Centralized authentication and user management table for all system users (staff, students, parents)."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique user identifier."
+    role_id:
+      type: INTEGER
+      nullable: true
+      fk: "roles.id"
+      description: "The role/permission level assigned to the user."
+    email:
+      type: VARCHAR
+      nullable: false
+      description: "Unique email address used for login and communication."
+    password_hash:
+      type: VARCHAR
+      nullable: true
+      description: "Securely hashed user password."
+    is_active:
+      type: BOOLEAN
+      nullable: true
+      description: "Whether the user account is active and allowed to log in (1 for true, 0 for false)."
+
+parents:
+  description: "Profiles of students' parents or guardians, containing contact information."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the parent record."
+    user_id:
+      type: INTEGER
+      nullable: true
+      fk: "users.id"
+      description: "Link to the central users table for login credentials."
+    father_name:
+      type: VARCHAR
+      nullable: true
+      description: "Full name of the student's father."
+    mother_name:
+      type: VARCHAR
+      nullable: true
+      description: "Full name of the student's mother."
+    phone:
+      type: VARCHAR
+      nullable: true
+      description: "Primary contact phone number for the parents."
+    address:
+      type: TEXT
+      nullable: true
+      description: "Residential address of the family."
+
+staff:
+  description: "Profiles for all school employees, including teachers, principals, librarians, and administrative staff."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the staff record."
+    user_id:
+      type: INTEGER
+      nullable: true
+      fk: "users.id"
+      description: "Link to the central users table for login credentials."
+    employee_id:
+      type: VARCHAR
+      nullable: false
+      description: "Unique internal school ID assigned to the employee."
+    first_name:
+      type: VARCHAR
+      nullable: false
+      description: "First name of the staff member."
+    last_name:
+      type: VARCHAR
+      nullable: false
+      description: "Last name of the staff member."
+    designation:
+      type: VARCHAR
+      nullable: true
+      description: "Job title of the employee (e.g., 'Teacher', 'Principal')."
+    department:
+      type: VARCHAR
+      nullable: true
+      description: "The department the employee works in (e.g., 'Academics', 'Administration')."
+    joining_date:
+      type: DATE
+      nullable: true
+      description: "The date the employee started working at the school."
+    salary:
+      type: DECIMAL
+      nullable: true
+      description: "Current salary of the employee."
+
+students:
+  description: "Profiles for all enrolled students, linking them to their class section and parents."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique identifier for the student record."
+    user_id:
+      type: INTEGER
+      nullable: true
+      fk: "users.id"
+      description: "Link to the central users table for student login credentials."
+    admission_no:
+      type: VARCHAR
+      nullable: false
+      description: "Unique, permanent admission number assigned by the school."
+    roll_no:
+      type: VARCHAR
+      nullable: true
+      description: "Sequential roll number assigned within the student's specific section."
+    first_name:
+      type: VARCHAR
+      nullable: false
+      description: "First name of the student."
+    last_name:
+      type: VARCHAR
+      nullable: false
+      description: "Last name of the student."
+    gender:
+      type: VARCHAR
+      nullable: true
+      description: "Gender of the student (e.g., 'Male', 'Female')."
+    dob:
+      type: DATE
+      nullable: true
+      description: "Date of birth of the student."
+    section_id:
+      type: INTEGER
+      nullable: true
+      fk: "sections.id"
+      description: "The specific class section the student is currently assigned to."
+    parent_id:
+      type: INTEGER
+      nullable: true
+      fk: "parents.id"
+      description: "Link to the parent/guardian contact record."
+
+class_subjects:
+  description: "Mapping table that defines which subjects are taught in which classes and assigns the responsible teacher."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique mapping identifier."
+    class_id:
+      type: INTEGER
+      nullable: true
+      fk: "classes.id"
+      description: "The grade level being taught."
+    subject_id:
+      type: INTEGER
+      nullable: true
+      fk: "subjects.id"
+      description: "The subject being taught."
+    teacher_id:
+      type: INTEGER
+      nullable: true
+      fk: "staff.id"
+      description: "The staff member (teacher) assigned to teach this subject to this class."
+
+attendance:
+  description: "Daily attendance logs tracking presence, absence, or tardiness for each student."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique attendance record identifier."
+    student_id:
+      type: INTEGER
+      nullable: true
+      fk: "students.id"
+      description: "The student whose attendance is being recorded."
+    class_id:
+      type: INTEGER
+      nullable: true
+      fk: "classes.id"
+      description: "The class the student attended."
+    date:
+      type: DATE
+      nullable: true
+      description: "The date of the attendance record."
+    status:
+      type: VARCHAR
+      nullable: true
+      description: "Attendance status — 'Present', 'Absent', 'Late', or 'Excused'."
+
+exams:
+  description: "Definitions of major examinations held during an academic year (e.g., Mid-Terms, Finals)."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique examination identifier."
+    name:
+      type: VARCHAR
+      nullable: false
+      description: "Name of the exam, e.g., 'Mid-Term Examination 2026'."
+    academic_year_id:
+      type: INTEGER
+      nullable: true
+      fk: "academic_years.id"
+      description: "The academic year during which this exam takes place."
+    start_date:
+      type: DATE
+      nullable: true
+      description: "The first day of the examination period."
+    end_date:
+      type: DATE
+      nullable: true
+      description: "The final day of the examination period."
+
+exam_marks:
+  description: "Records of scores achieved by students in specific subjects during a specific exam."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique mark record identifier."
+    exam_id:
+      type: INTEGER
+      nullable: true
+      fk: "exams.id"
+      description: "The examination event this score belongs to."
+    student_id:
+      type: INTEGER
+      nullable: true
+      fk: "students.id"
+      description: "The student who took the exam."
+    subject_id:
+      type: INTEGER
+      nullable: true
+      fk: "subjects.id"
+      description: "The subject being tested."
+    marks_obtained:
+      type: DECIMAL
+      nullable: true
+      description: "The numeric score the student achieved."
+    max_marks:
+      type: DECIMAL
+      nullable: true
+      description: "The maximum possible score for this exam subject."
+    grade:
+      type: VARCHAR
+      nullable: true
+      description: "The letter grade assigned based on the marks obtained (e.g., 'A', 'B', 'C')."
+
+fee_structures:
+  description: "Defines the standard fee amounts required for different classes and fee types (e.g., Tuition, Transport)."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique fee structure identifier."
+    class_id:
+      type: INTEGER
+      nullable: true
+      fk: "classes.id"
+      description: "The grade level this fee applies to."
+    fee_type:
+      type: VARCHAR
+      nullable: true
+      description: "The category of the fee, e.g., 'Tuition', 'Library', 'Transport'."
+    amount:
+      type: DECIMAL
+      nullable: true
+      description: "The standard monetary amount charged for this fee type."
+
+fee_payments:
+  description: "Ledger of actual fee payments made by students, tracking amounts, dates, and payment status."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique payment transaction identifier."
+    student_id:
+      type: INTEGER
+      nullable: true
+      fk: "students.id"
+      description: "The student whose fees are being paid."
+    amount_paid:
+      type: DECIMAL
+      nullable: true
+      description: "The monetary amount successfully paid in this transaction."
+    payment_date:
+      type: DATE
+      nullable: true
+      description: "The date the transaction occurred."
+    payment_mode:
+      type: VARCHAR
+      nullable: true
+      description: "The method of payment used — 'Cash', 'Online', or 'Cheque'."
+    status:
+      type: VARCHAR
+      nullable: true
+      description: "The current state of this payment obligation — 'Paid', 'Pending', or 'Overdue'."
+
+timetables:
+  description: "Weekly scheduling records defining when and where specific subjects are taught by specific teachers for each section."
+  columns:
+    id:
+      type: INTEGER
+      primary_key: true
+      nullable: false
+      description: "Unique timetable entry identifier."
+    section_id:
+      type: INTEGER
+      nullable: true
+      fk: "sections.id"
+      description: "The class section this schedule applies to."
+    subject_id:
+      type: INTEGER
+      nullable: true
+      fk: "subjects.id"
+      description: "The subject being taught during this time slot."
+    teacher_id:
+      type: INTEGER
+      nullable: true
+      fk: "staff.id"
+      description: "The teacher conducting the class."
+    day_of_week:
+      type: VARCHAR
+      nullable: true
+      description: "The day the class occurs (e.g., 'Monday', 'Tuesday')."
+    start_time:
+      type: TIME
+      nullable: true
+      description: "The time the class period begins."
+    end_time:
+      type: TIME
+      nullable: true
+      description: "The time the class period ends."
+    room_no:
+      type: VARCHAR
+      nullable: true
+      description: "The physical classroom or lab number where the class takes place."
